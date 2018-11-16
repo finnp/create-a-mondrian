@@ -1,11 +1,18 @@
 module.exports = store
 
 function store (state, emitter) {
-  state.totalClicks = 0
+  state.visible = false
+  state.posY = 0
 
   emitter.on('DOMContentLoaded', function () {
-    emitter.on('clicks:add', function (count) {
-      state.totalClicks += count
+    emitter.on('line:hover', function (posY) {
+      state.posY = posY
+      state.visible = true
+      emitter.emit(state.events.RENDER)
+    })
+
+    emitter.on('line:out', function () {
+      state.visible = false
       emitter.emit(state.events.RENDER)
     })
   })
