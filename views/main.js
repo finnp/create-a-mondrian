@@ -22,7 +22,7 @@ function view (state, emit) {
    xmlns="http://www.w3.org/2000/svg">
 
 
-   ${state.visible && html`<rect x="${state.isVertical ? 0 : state.pos}" y="${state.isVertical ? state.pos : 0}" width="${state.isVertical ? state.length : lineWidth}" height="${state.isVertical ? lineWidth : state.length}" fill="grey" />`}
+   ${state.visible && html`<rect x="${state.isVertical ? state.start : state.pos}" y="${state.isVertical ? state.pos : state.start}" width="${state.isVertical ? state.length : lineWidth}" height="${state.isVertical ? lineWidth : state.length}" fill="grey" />`}
 
    ${state.verticals.map(({x,y,length}) =>
     html`<rect style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverVertical} x="${x}" y="${y}" width="${lineWidth}" height="${length}" fill="black" />`
@@ -40,12 +40,14 @@ function view (state, emit) {
   }
 
   function onHoverVertical (e) {
-    const posY = e.offsetY
-    emit('line:hoverVertical', posY)
+    const x = e.offsetX
+    const y = e.offsetY
+    emit('line:hoverVertical', {x,y})
   }
   function onHoverHorizontal (e) {
-    const posX = e.offsetX
-    emit('line:hoverHorizontal', posX)
+    const x = e.offsetX
+    const y = e.offsetY
+    emit('line:hoverHorizontal', {x,y})
   }
 
   function onLineOut (e) {
