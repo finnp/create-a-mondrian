@@ -13,6 +13,15 @@ function store (state, emitter) {
   state.posY = 0
 
   emitter.on('DOMContentLoaded', function () {
+    emitter.on('line:click', function () {
+      if (!state.isVertical) {
+        state.verticals.push({x: state.pos, y: 0, length: 700})
+      } else {
+        state.horizontals.push({x: 0, y: state.pos, length: 700})
+      }
+      state.visible = false
+      emitter.emit(state.events.RENDER)
+    })
     emitter.on('line:hoverVertical', function (posY) {
       state.isVertical = true
       state.pos = posY

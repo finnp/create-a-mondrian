@@ -25,15 +25,19 @@ function view (state, emit) {
    ${state.visible && html`<rect x="${state.isVertical ? 0 : state.pos}" y="${state.isVertical ? state.pos : 0}" width="${state.isVertical ? '100%' : lineWidth}" height="${state.isVertical ? lineWidth : '100%'}" fill="grey" />`}
 
    ${state.verticals.map(({x,y,length}) =>
-    html`<rect onmouseout=${onLineOut} onmousemove=${onHoverVertical} x="${x}" y="${y}" width="${lineWidth}" height="${length}" fill="black" />`
+    html`<rect style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverVertical} x="${x}" y="${y}" width="${lineWidth}" height="${length}" fill="black" />`
   )}
    ${state.horizontals.map(({x,y,length}) =>
-    html`<rect onmouseout=${onLineOut} onmousemove=${onHoverHorizontal} x="${x}" y="${y}" width="${length}" height="${lineWidth}" fill="black" />`
+    html`<rect style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverHorizontal} x="${x}" y="${y}" width="${length}" height="${lineWidth}" fill="black" />`
   )}
 
    </svg>
     </body>
   `
+
+  function onLineClick () {
+    emit('line:click')
+  }
 
   function onHoverVertical (e) {
     const posY = e.offsetY
