@@ -22,21 +22,26 @@ function view (state, emit) {
    xmlns="http://www.w3.org/2000/svg">
 
 
-   ${state.visible && html`<rect x="0" y="${state.posY}" width="100%" height="${lineWidth}" fill="grey" />`}
+   ${state.visible && html`<rect x="${state.isVertical ? 0 : state.pos}" y="${state.isVertical ? state.pos : 0}" width="${state.isVertical ? '100%' : lineWidth}" height="${state.isVertical ? lineWidth : '100%'}" fill="grey" />`}
 
-
-   <rect onmouseout=${onLineOut} onmousemove=${onHoverLine} x="0" y="0" width="${lineWidth}" height="100%" fill="black" />
-   <rect onmouseout=${onLineOut} onmousemove=${onHoverLine} x="${width-lineWidth}" y="0" width="${lineWidth}" height="100%" fill="black" />
-   <rect onmouseout=${onLineOut} onmousemove=${onHoverLine} x="0" y="0" width="100%" height="${lineWidth}" fill="black" />
-   <rect onmouseout=${onLineOut} onmousemove=${onHoverLine} x="0" y="${width-lineWidth}" width="100%" height="${lineWidth}" fill="black" />
+   ${state.verticals.map(({x,y,length}) =>
+    html`<rect onmouseout=${onLineOut} onmousemove=${onHoverVertical} x="${x}" y="${y}" width="${lineWidth}" height="${length}" fill="black" />`
+  )}
+   ${state.horizontals.map(({x,y,length}) =>
+    html`<rect onmouseout=${onLineOut} onmousemove=${onHoverHorizontal} x="${x}" y="${y}" width="${length}" height="${lineWidth}" fill="black" />`
+  )}
 
    </svg>
     </body>
   `
 
-  function onHoverLine (e) {
+  function onHoverVertical (e) {
     const posY = e.offsetY
-    emit('line:hover', posY)
+    emit('line:hoverVertical', posY)
+  }
+  function onHoverHorizontal (e) {
+    const posX = e.offsetX
+    emit('line:hoverHorizontal', posX)
   }
 
   function onLineOut (e) {
