@@ -22,7 +22,7 @@ function view (state, emit) {
    xmlns="http://www.w3.org/2000/svg">
 
 
-   ${state.visible && html`<rect x="${state.isVertical ? 0 : state.pos}" y="${state.isVertical ? state.pos : 0}" width="${state.isVertical ? '100%' : lineWidth}" height="${state.isVertical ? lineWidth : '100%'}" fill="grey" />`}
+   ${state.visible && html`<rect x="${state.isVertical ? 0 : state.pos}" y="${state.isVertical ? state.pos : 0}" width="${state.isVertical ? state.length : lineWidth}" height="${state.isVertical ? lineWidth : state.length}" fill="grey" />`}
 
    ${state.verticals.map(({x,y,length}) =>
     html`<rect style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverVertical} x="${x}" y="${y}" width="${lineWidth}" height="${length}" fill="black" />`
