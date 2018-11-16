@@ -15,8 +15,7 @@ function view (state, emit) {
 
   return html`
     <body class="code lh-copy">
-    <div onclick=${onclick}>test</div>
-    <svg version="1.1"
+    <svg class="db center" version="1.1"
    baseProfile="full"
    width="${width}" height="${height}"
    xmlns="http://www.w3.org/2000/svg">
