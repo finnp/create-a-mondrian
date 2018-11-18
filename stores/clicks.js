@@ -30,6 +30,9 @@ function store (state, emitter) {
       state.currentRect = null
       emitter.emit(state.events.RENDER)
     })
+    emitter.on('rect:colorHover', function (color) {
+      state.currentColor = color
+    })
     emitter.on('line:click', function () {
       if (!state.isVertical) {
         const x = state.pos
