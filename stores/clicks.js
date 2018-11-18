@@ -9,24 +9,25 @@ function store (state, emitter) {
     x: 0,
     y: 0,
     height: height,
-    width: width
+    width: width,
+    color: 'white'
   }]
-
-  state.verticals = [
-    {x: 0, y: 0, length: 700},
-    {x: 700, y: 0, length: 700},
-  ]
-  state.horizontals = [
-    {x: 0, y: 0, length: 700},
-    {x: 0, y: 700, length: 700},
-  ]
   state.visible = false
   state.posY = 0
   state.length = 700
 
   emitter.on('DOMContentLoaded', function () {
     emitter.on('rect:hover', function (rect) {
-      state.currentRect = rect
+      if (rect !== state.pauseRect) {
+        state.currentRect = rect
+        state.pauseRect = null
+        emitter.emit(state.events.RENDER)
+      }
+    })
+    emitter.on('rect:colorPick', function (color) {
+      state.currentRect.color = color
+      state.pauseRect = state.currentRect
+      state.currentRect = null
       emitter.emit(state.events.RENDER)
     })
     emitter.on('line:click', function () {
@@ -44,7 +45,6 @@ function store (state, emitter) {
           .concat(rectsLeft)
           .concat(rectsRight)
           .concat(splitRectVertical(rect, state.pos))
-        state.verticals.push({x: state.pos, y: state.start, length: state.length})
       } else {
         const y = state.pos
         const x = state.start
@@ -58,7 +58,6 @@ function store (state, emitter) {
           .concat(rectsUp)
           .concat(rectsDown)
           .concat(splitRectHorizontal(rect, state.pos))
-        state.horizontals.push({x: state.start, y: state.pos, length: state.length})
       }
       state.visible = false
       emitter.emit(state.events.RENDER)
@@ -69,7 +68,7 @@ function store (state, emitter) {
       state.currentRect = null
       state.pos = y
       state.start = x
-      state.length = state.verticals
+      state.length = rectsToVerticals(state.rects)
         .filter(v => v.y <= y && y <= v.y + v.length && v.x > x)
         .sort((a, b) => a.x - b.x)[0].x - x
       state.visible = true
@@ -81,7 +80,7 @@ function store (state, emitter) {
       state.currentRect = null
       state.pos = x
       state.start = y
-      const endPos = state.horizontals
+      const endPos = rectsToHorizontals(state.rects)
         .filter(h => h.x <= x && x <= h.x + h.length && h.y > y)
         .sort((a, b) => a.y - b.y)[0].y - y
       state.length = endPos
@@ -99,15 +98,33 @@ function store (state, emitter) {
 function splitRectVertical (rect, x) {
   const posX = x - rect.x
   return [
-    {x: rect.x, y: rect.y, width: posX, height: rect.height},
-    {x: rect.x + posX, y: rect.y, width: rect.width - posX, height: rect.height}
+    {x: rect.x, y: rect.y, width: posX, height: rect.height, color: rect.color},
+    {x: rect.x + posX, y: rect.y, width: rect.width - posX, height: rect.height, color: rect.color}
   ]
 }
 
 function splitRectHorizontal (rect, y) {
   const posY = y - rect.y
   return [
-    {x: rect.x, y: rect.y, height: y, width: rect.width},
-    {x: rect.x, y: rect.y + posY, height: rect.height - posY, width: rect.width}
+    {x: rect.x, y: rect.y, height: y, width: rect.width, color: rect.color},
+    {x: rect.x, y: rect.y + posY, height: rect.height - posY, width: rect.width, color: rect.color}
   ]
+}
+
+function rectsToVerticals (rects) {
+  return rects
+    .map(rect => ([
+      {x: rect.x, y: rect.y, length: rect.height},
+      {x: rect.x + rect.width, y: rect.y, length: rect.height},
+    ]))
+    .reduce((a, b) => a.concat(b))
+}
+
+function rectsToHorizontals (rects) {
+  return rects
+    .map(rect => ([
+      {x: rect.x, y: rect.y, length: rect.width},
+      {x: rect.x, y: rect.y + rect.height, length: rect.width},
+    ]))
+    .reduce((a, b) => a.concat(b))
 }
