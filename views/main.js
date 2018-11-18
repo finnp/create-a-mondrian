@@ -130,13 +130,13 @@ function view (state, emit) {
     return html`
      <g>
       ${colors.map((color,index) => html`<rect
-        onmousemove=${onColorHover(null, color)}
+        onmousemove=${onColorHover.bind(null, color)}
         onclick=${onColorClick.bind(null, color)}
         x=${rect.x + index * rect.width/colors.length}
         y=${rect.y}
         height=${rect.height}
         width=${rect.width/5}
-        fill="${getColor(color, 0.5)}"/>`
+        fill="${getColor(color, state.currentColor === color ? 1 : 0.5)}"/>`
       )}
      </g>
     `

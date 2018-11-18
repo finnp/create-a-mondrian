@@ -32,6 +32,7 @@ function store (state, emitter) {
     })
     emitter.on('rect:colorHover', function (color) {
       state.currentColor = color
+      emitter.emit(state.events.RENDER)
     })
     emitter.on('line:click', function () {
       if (!state.isVertical) {
