@@ -3,7 +3,7 @@ var choo = require('choo')
 
 css('tachyons')
 
-var app = choo()
+var app = choo({href: false})
 if (process.env.NODE_ENV !== 'production') {
   app.use(require('choo-devtools')())
 } else {
