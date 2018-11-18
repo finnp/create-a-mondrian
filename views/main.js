@@ -17,7 +17,9 @@ function view (state, emit) {
 
   return html`
     <body class="code lh-copy">
-    <svg class="db center" version="1.1"
+    <div class="center" style="width:700px">
+    <h1 class="f1 mt0 mb0">create a mondrian</h1>
+    <svg style="border: 10px solid black;" version="1.1"
    baseProfile="full"
    width="${state.width}" height="${state.height}"
    xmlns="http://www.w3.org/2000/svg">
@@ -45,6 +47,7 @@ function view (state, emit) {
   )}
 
    </svg>
+   </div>
     </body>
   `
 
