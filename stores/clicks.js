@@ -12,6 +12,8 @@ function store (state, emitter) {
     width: width,
     color: 'white'
   }]
+  state.verticals = rectsToVerticals(state.rects)
+  state.horizontals = rectsToHorizontals(state.rects)
   state.visible = false
   state.posY = 0
   state.length = 700
@@ -43,12 +45,12 @@ function store (state, emitter) {
 
         const rectsLeft = possibleRects.filter(rect => rect.x <= x)
         const rectsRight = possibleRects.filter(rect => rect.x > x)
-
         const rect = rectsLeft.sort((a,b) => a.x - b.x).pop()
         state.rects = ignoredRects
           .concat(rectsLeft)
           .concat(rectsRight)
           .concat(splitRectVertical(rect, state.pos))
+        state.verticals = rectsToVerticals(state.rects)
       } else {
         const y = state.pos
         const x = state.start
@@ -62,6 +64,7 @@ function store (state, emitter) {
           .concat(rectsUp)
           .concat(rectsDown)
           .concat(splitRectHorizontal(rect, state.pos))
+        state.horizontals = rectsToHorizontals(state.rects)
       }
       state.visible = false
       emitter.emit(state.events.RENDER)
@@ -72,7 +75,7 @@ function store (state, emitter) {
       state.currentRect = null
       state.pos = y
       state.start = x
-      state.length = rectsToVerticals(state.rects)
+      state.length = state.verticals
         .filter(v => v.y <= y && y <= v.y + v.length && v.x > x)
         .sort((a, b) => a.x - b.x)[0].x - x
       state.visible = true
@@ -84,7 +87,7 @@ function store (state, emitter) {
       state.currentRect = null
       state.pos = x
       state.start = y
-      const endPos = rectsToHorizontals(state.rects)
+      const endPos = state.horizontals
         .filter(h => h.x <= x && x <= h.x + h.length && h.y > y)
         .sort((a, b) => a.y - b.y)[0].y - y
       state.length = endPos
@@ -110,7 +113,7 @@ function splitRectVertical (rect, x) {
 function splitRectHorizontal (rect, y) {
   const posY = y - rect.y
   return [
-    {x: rect.x, y: rect.y, height: y, width: rect.width, color: rect.color},
+    {x: rect.x, y: rect.y, height: posY, width: rect.width, color: rect.color},
     {x: rect.x, y: rect.y + posY, height: rect.height - posY, width: rect.width, color: rect.color}
   ]
 }

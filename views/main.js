@@ -39,11 +39,12 @@ function view (state, emit) {
      style="stroke:rgba(0,0,0,0.3);stroke-width:${state.lineWidth};"
     />`}
 
-   ${rectsToVerticals(state.rects).map(({x,y,length}) =>
-    html`<line style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverVertical.bind(null, x)} x1="${x}" y1="${y}" x2="${x}" y2="${y+length}" style="stroke:black;stroke-width:${state.lineWidth};" />`
-  )}
-   ${rectsToHorizontals(state.rects).map(({x,y,length}) =>
-    html`<line style="cursor: pointer;" onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverHorizontal.bind(null,y)} x1="${x}" y1="${y}" x2="${x+length}" y2="${y}" style="stroke:black;stroke-width:${state.lineWidth};" />`
+  ${state.horizontals.map(({x,y,length}) =>
+     html`<line onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverHorizontal.bind(null,y)} x1="${x}" y1="${y}" x2="${x+length}" y2="${y}" style="stroke:black;stroke-width:${state.lineWidth};cursor: pointer;" />`
+   )}
+
+   ${state.verticals.map(({x,y,length}) =>
+    html`<line onclick=${onLineClick} onmouseout=${onLineOut} onmousemove=${onHoverVertical.bind(null, x)} x1="${x}" y1="${y}" x2="${x}" y2="${y+length}" style="stroke:black;stroke-width:${state.lineWidth};cursor: pointer;" />`
   )}
 
    </svg>
@@ -70,24 +71,6 @@ function view (state, emit) {
 
   function onLineOut (e) {
     emit('line:out')
-  }
-
-  function rectsToVerticals (rects) {
-    return rects
-      .map(rect => ([
-        {x: rect.x, y: rect.y, length: rect.height},
-        {x: rect.x + rect.width, y: rect.y, length: rect.height},
-      ]))
-      .reduce((a, b) => a.concat(b))
-  }
-
-  function rectsToHorizontals (rects) {
-    return rects
-      .map(rect => ([
-        {x: rect.x, y: rect.y, length: rect.width},
-        {x: rect.x, y: rect.y + rect.height, length: rect.width},
-      ]))
-      .reduce((a, b) => a.concat(b))
   }
 
   function onColorClick (color) {

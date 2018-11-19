@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "bankai build --base https://www.finnpauls.de/create-a-mondrian/ && gh-pages -d dist",
+    "build": "bankai build index.js --base https://www.finnpauls.de/create-a-mondrian/ && gh-pages -d dist",
     "create": "choo-scaffold",
     "inspect": "bankai inspect index.js",
     "start": "bankai start index.js",
