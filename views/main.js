@@ -113,16 +113,20 @@ function view (state, emit) {
   }
 
   function renderColorPicker (rect) {
+    const width = rect.width - state.lineWidth
+    const height = rect.height - state.lineWidth
+    const x = rect.x + state.lineWidth / 2
+    const y = rect.y + state.lineWidth / 2
     return html`
      <g>
       ${colors.map((color,index) => html`<rect
         style="cursor:pointer;"
         onmousemove=${onColorHover.bind(null, color)}
         onclick=${onColorClick.bind(null, color)}
-        x=${rect.x + index * rect.width/colors.length}
-        y=${rect.y}
-        height=${rect.height}
-        width=${rect.width/5}
+        x=${x + index * width/colors.length}
+        y=${y}
+        height=${height}
+        width=${width/5}
         fill="${getColor(color, state.currentColor === color ? 1 : 0.5)}"/>`
       )}
      </g>
