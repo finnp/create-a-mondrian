@@ -116,6 +116,7 @@ function view (state, emit) {
     return html`
      <g>
       ${colors.map((color,index) => html`<rect
+        style="cursor:pointer;"
         onmousemove=${onColorHover.bind(null, color)}
         onclick=${onColorClick.bind(null, color)}
         x=${rect.x + index * rect.width/colors.length}
