@@ -106,7 +106,7 @@ function splitRectVertical (rect, x) {
   const posX = x - rect.x
   return [
     {x: rect.x, y: rect.y, width: posX, height: rect.height, color: rect.color},
-    {x: rect.x + posX, y: rect.y, width: rect.width - posX, height: rect.height, color: rect.color}
+    {x: rect.x + posX, y: rect.y, width: rect.width - posX, height: rect.height, color: rect.color === 'black' ? 'white' : rect.color}
   ]
 }
 
@@ -114,7 +114,7 @@ function splitRectHorizontal (rect, y) {
   const posY = y - rect.y
   return [
     {x: rect.x, y: rect.y, height: posY, width: rect.width, color: rect.color},
-    {x: rect.x, y: rect.y + posY, height: rect.height - posY, width: rect.width, color: rect.color}
+    {x: rect.x, y: rect.y + posY, height: rect.height - posY, width: rect.width, color: rect.color === 'black' ? 'white' : rect.color}
   ]
 }
 

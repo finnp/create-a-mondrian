@@ -36,7 +36,7 @@ function view (state, emit) {
      y1="${state.isVertical ? state.pos : state.start}"
      x2="${state.isVertical ? state.start + state.length : state.pos}"
      y2="${state.isVertical ? state.pos : state.start + state.length}"
-     style="stroke:rgba(0,0,0,0.3);stroke-width:${state.lineWidth};"
+     style="stroke:rgba(122,122,122,0.5);stroke-width:${state.lineWidth};"
     />`}
 
   ${state.horizontals.map(({x,y,length}) =>
