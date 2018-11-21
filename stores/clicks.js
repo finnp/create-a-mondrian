@@ -19,23 +19,27 @@ function store (state, emitter) {
   state.length = 700
 
   emitter.on('DOMContentLoaded', function () {
-    emitter.on('rect:hover', function (rect) {
-      if (rect !== state.pauseRect) {
+    emitter.on('rect:hover', function (rect, mousePosition) {
+      if (!state.freezePosition || distance(mousePosition, state.freezePosition) > 50) {
+        state.freezePosition = false
         state.currentRect = rect
         state.pauseRect = null
         emitter.emit(state.events.RENDER)
       }
     })
-    emitter.on('rect:colorPick', function (color) {
+
+    emitter.on('rect:colorPick', function (color, mousePosition) {
       state.currentRect.color = color
-      state.pauseRect = state.currentRect
+      state.freezePosition = mousePosition
       state.currentRect = null
       emitter.emit(state.events.RENDER)
     })
+
     emitter.on('rect:colorHover', function (color) {
       state.currentColor = color
       emitter.emit(state.events.RENDER)
     })
+
     emitter.on('line:click', function () {
       if (!state.isVertical) {
         const x = state.pos
@@ -134,4 +138,8 @@ function rectsToHorizontals (rects) {
       {x: rect.x, y: rect.y + rect.height, length: rect.width},
     ]))
     .reduce((a, b) => a.concat(b))
+}
+
+function distance (posA, posB) {
+  return Math.abs(posA.x - posB.x) + Math.abs(posA.y - posB.y)
 }

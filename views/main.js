@@ -65,16 +65,24 @@ function view (state, emit) {
     emit('line:hoverHorizontal', {x,y})
   }
 
-  function onHoverRectangle (rect) {
-    emit('rect:hover', rect)
+  function onHoverRectangle (rect, e) {
+    const mousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    }
+    emit('rect:hover', rect, mousePosition)
   }
 
   function onLineOut (e) {
     emit('line:out')
   }
 
-  function onColorClick (color) {
-    emit('rect:colorPick', color)
+  function onColorClick (color, e) {
+    const mousePosition = {
+      x: e.clientX,
+      y: e.clientY
+    }
+    emit('rect:colorPick', color, mousePosition)
   }
 
   function onColorHover (color) {
@@ -84,6 +92,7 @@ function view (state, emit) {
   function getColor (colorName, a) {
     a = a || 1
     let r,g,b = 0
+
     if (colorName === 'red') {
       r = 238
       g = 21
