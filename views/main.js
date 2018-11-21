@@ -117,16 +117,18 @@ function view (state, emit) {
     const height = rect.height - state.lineWidth
     const x = rect.x + state.lineWidth / 2
     const y = rect.y + state.lineWidth / 2
+
+    const verticallyStacked = rect.height > rect.width
     return html`
      <g>
       ${colors.map((color,index) => html`<rect
         style="cursor:pointer;"
         onmousemove=${onColorHover.bind(null, color)}
         onclick=${onColorClick.bind(null, color)}
-        x=${x + index * width/colors.length}
-        y=${y}
-        height=${height}
-        width=${width/5}
+        x=${x + (verticallyStacked ? 0 : (index * width/colors.length))}
+        y=${y + (verticallyStacked ? (index * height/colors.length) : 0)}
+        height=${verticallyStacked ? (height/5) : height}
+        width=${verticallyStacked ? width : (width/5)}
         fill="${getColor(color, state.currentColor === color ? 1 : 0.5)}"/>`
       )}
      </g>
